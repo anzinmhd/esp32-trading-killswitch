@@ -1,0 +1,24 @@
+# Credentials — NEVER commit these
+firmware/secrets.h
+*.env
+.env.local
+config.json
+
+# Arduino build artifacts
+build/
+*.elf
+*.bin
+*.map
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE files
+.vscode/
+*.code-workspace
+.idea/
+
+# Logs
+*.log
