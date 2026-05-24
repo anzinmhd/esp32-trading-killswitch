@@ -96,22 +96,40 @@ Refer to `hardware/wiring_diagram.png` for the full diagram.
 
 Quick reference:
 
-```
-Button (one leg) ──────► GPIO 4
-Button (other leg) ────► GND
-10kΩ resistor ─────────► between GPIO 4 and 3.3V
+```mermaid
+flowchart LR
+    %% ESP32 Pins
+    subgraph ESP32["ESP32 Pins"]
+        direction TB
+        G4[GPIO 4]
+        G18[GPIO 18]
+        G19[GPIO 19]
+        G20[GPIO 20]
+        G21[GPIO 21]
+        G22[GPIO 22]
+        V33[3.3V]
+        GND[GND]
+    end
 
-RGB LED Red leg ────────► 220Ω ──► GPIO 19
-RGB LED Green leg ──────► 220Ω ──► GPIO 20
-RGB LED GND leg ────────► GND
+    %% Button
+    Btn[Button Leg 1] --> G4
+    BtnG[Button Leg 2] --> GND
+    V33 -- "10kΩ Pull-up" --> G4
 
-OLED VCC ──────────────► 3.3V
-OLED GND ──────────────► GND
-OLED SDA ──────────────► GPIO 21
-OLED SCL ──────────────► GPIO 22
+    %% LED
+    LEDR[RGB Red Leg] -- "220Ω Resistor" --> G19
+    LEDG[RGB Green Leg] -- "220Ω Resistor" --> G20
+    LEDGND[RGB GND Leg] --> GND
 
-Buzzer + ──────────────► GPIO 18
-Buzzer - ──────────────► GND
+    %% OLED
+    OLED_V[OLED VCC] --> V33
+    OLED_G[OLED GND] --> GND
+    OLED_SDA[OLED SDA] --> G21
+    OLED_SCL[OLED SCL] --> G22
+
+    %% Buzzer
+    BuzzP[Buzzer +] --> G18
+    BuzzN[Buzzer -] --> GND
 ```
 
 ---

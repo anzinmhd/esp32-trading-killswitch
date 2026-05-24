@@ -28,85 +28,69 @@ The OLED counts down during the hold so you know it's registering.
 
 ## Component Architecture
 
-```
-┌───────────────────────────────────────────────────────┐
-│                    ESP32 (38-pin)                      │
-│                                                        │
-│  ┌──────────────┐    ┌──────────────────────────────┐ │
-│  │  GPIO Layer  │    │      Application Logic        │ │
-│  │              │    │                              │ │
-│  │  GPIO 4  ────┼───►│  Button ISR + debounce       │ │
-│  │  GPIO 18 ◄───┼────│  Buzzer control              │ │
-│  │  GPIO 19 ◄───┼────│  LED Red                     │ │
-│  │  GPIO 20 ◄───┼────│  LED Green                   │ │
-│  │  GPIO 21 ◄───┼────│  I2C SDA (OLED)              │ │
-│  │  GPIO 22 ◄───┼────│  I2C SCL (OLED)              │ │
-│  └──────────────┘    │                              │ │
-│                       │  ┌────────────────────────┐ │ │
-│  ┌──────────────┐    │  │   WiFi Stack (built-in) │ │ │
-│  │  Flash Memory│    │  │   WPA2, 2.4GHz          │ │ │
-│  │              │    │  │   TLS 1.2 for HTTPS     │ │ │
-│  │  secrets.h   │───►│  └────────────────────────┘ │ │
-│  │  (tokens)    │    │                              │ │
-│  └──────────────┘    └──────────────────────────────┘ │
-└───────────────────────────────────────────────────────┘
-           │
-           │ HTTPS (TLS)
-           │
-    ┌──────┴────────────────────────────────┐
-    │                                        │
-    ▼                                        ▼
-Upstox API v2                        Telegram Bot API
-api.upstox.com                       api.telegram.org
+```mermaid
+flowchart LR
+    subgraph ESP32["ESP32 (38-pin)"]
+        direction TB
+        
+        subgraph GPIO["GPIO Layer"]
+            G4[GPIO 4]
+            G18[GPIO 18]
+            G19[GPIO 19]
+            G20[GPIO 20]
+            G21[GPIO 21]
+            G22[GPIO 22]
+        end
+        
+        subgraph Logic["Application Logic"]
+            BtnISR[Button ISR + debounce]
+            BuzzCtrl[Buzzer control]
+            LEDR[LED Red]
+            LEDG[LED Green]
+            OLED_SDA[I2C SDA OLED]
+            OLED_SCL[I2C SCL OLED]
+        end
+        
+        subgraph Mem["Flash Memory"]
+            Sec[secrets.h tokens]
+        end
+        
+        subgraph WiFi["WiFi Stack (built-in)"]
+            WPA[WPA2, 2.4GHz]
+            TLS[TLS 1.2 for HTTPS]
+        end
+
+        G4 --> BtnISR
+        Logic -->|Buzzer| G18
+        Logic -->|Red| G19
+        Logic -->|Green| G20
+        Logic -->|SDA| G21
+        Logic -->|SCL| G22
+        
+        Sec --> Logic
+        Logic --> WiFi
+    end
+
+    WiFi -->|HTTPS TLS| Upstox[Upstox API v2]
+    WiFi -->|HTTPS TLS| Telegram[Telegram Bot API]
 ```
 
 ---
 
 ## Kill Sequence — Detailed Flow
 
-```
-                    ┌─────────────┐
-                    │ Button held │
-                    │   > 3 sec   │
-                    └──────┬──────┘
-                           │
-                    ┌──────▼──────┐
-                    │  Set LED    │
-                    │   YELLOW    │
-                    │ OLED: "..." │
-                    └──────┬──────┘
-                           │
-              ┌────────────▼────────────┐
-              │  GET /v2/order/         │
-              │  (fetch pending orders) │
-              └────────────┬────────────┘
-                           │
-              ┌────────────▼────────────┐
-              │  DELETE each order      │
-              │  via /v2/orders/{id}    │
-              └────────────┬────────────┘
-                           │
-              ┌────────────▼────────────┐
-              │  GET /v2/portfolio/     │
-              │  positions              │
-              └────────────┬────────────┘
-                           │
-              ┌────────────▼────────────┐
-              │  For each open position │
-              │  POST /v2/order/place   │
-              │  (opposing market order)│
-              └────────────┬────────────┘
-                           │
-              ┌────────────▼────────────┐
-              │  POST Telegram alert    │
-              │  with summary           │
-              └────────────┬────────────┘
-                           │
-                    ┌──────▼──────┐
-                    │  LED → RED  │
-                    │  Buzzer x3  │
-                    │OLED: "DONE" │
-                    └─────────────┘
+```mermaid
+flowchart TD
+    A[Button held > 3 sec] --> B[Set LED YELLOW]
+    B --> C[OLED: '...']
+    C --> D[GET /v2/order/ <br> fetch pending orders]
+    D --> E[DELETE each order via /v2/orders/id]
+    E --> F[GET /v2/portfolio/positions]
+    F --> G[POST /v2/order/place <br> opposing market order]
+    G --> H[POST Telegram alert with summary]
+    H --> I[LED -> RED]
+    I --> J[Buzzer x3]
+    J --> K[OLED: 'DONE']
 ```
 
 ---
