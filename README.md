@@ -28,51 +28,48 @@ When the emergency button is pressed and held for 3 seconds:
 
 ## System Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        PHYSICAL LAYER                           │
-│                                                                 │
-│   [🔴 Mushroom Button]──────────────────────────────────────┐  │
-│   [💡 RGB LED      ]                                        │  │
-│   [📟 OLED Display ]◄──────── [ESP32 38-pin]               │  │
-│   [🔔 Buzzer       ]          (Brain)        │              │  │
-│   [🔌 USB Power    ]──────────────────────────              │  │
-└─────────────────────────────────────────────────────────────────┘
-                                    │
-                              WiFi (2.4GHz)
-                                    │
-              ┌─────────────────────┼──────────────────────┐
-              ▼                     ▼                       ▼
-   ┌─────────────────┐   ┌──────────────────┐   ┌─────────────────┐
-   │  Upstox REST API│   │  Telegram Bot API │   │  Bot Kill Flag  │
-   │                 │   │                  │   │  (Webhook/File) │
-   │ • Cancel orders │   │ • Instant alert  │   │                 │
-   │ • Close positions│  │ • Timestamp      │   │ • Stops bot from│
-   │ • Order history │   │ • Position summary│  │   new orders    │
-   └─────────────────┘   └──────────────────┘   └─────────────────┘
+```mermaid
+flowchart TD
+    subgraph Physical["PHYSICAL LAYER"]
+        direction LR
+        
+        subgraph Components
+            direction TB
+            BTN[🔴 Mushroom Button]
+            LED[💡 RGB LED]
+            OLED[📟 OLED Display]
+            BUZZ[🔔 Buzzer]
+            PWR[🔌 USB Power]
+        end
+        
+        ESP["ESP32 38-pin<br>(Brain)"]
+        
+        BTN --> ESP
+        PWR --> ESP
+        ESP --> LED
+        ESP --> OLED
+        ESP --> BUZZ
+    end
+    
+    Physical -->|WiFi 2.4GHz| UP["Upstox REST API <br> • Cancel orders <br> • Close positions <br> • Order history"]
+    Physical -->|WiFi 2.4GHz| TEL["Telegram Bot API <br> • Instant alert <br> • Timestamp <br> • Position summary"]
+    Physical -->|WiFi 2.4GHz| BOT["Bot Kill Flag <br> (Webhook/File) <br> • Stops bot from <br> new orders"]
 ```
 
 ---
 
 ## Trigger Sequence
 
-```
-Button Hold (3s)
-      │
-      ▼
- Debounce Check ──[false trigger?]──► Ignore
-      │
-      ▼
- LED → YELLOW (working...)
-      │
-      ├──► 1. Cancel all pending orders  (Upstox API)
-      ├──► 2. Close all open positions   (Upstox API)
-      ├──► 3. Set bot kill flag          (Webhook / shared flag)
-      └──► 4. Send Telegram alert
-      │
-      ▼
- LED → RED (done)  +  Buzzer beep x3
- OLED → "KILL EXECUTED — [timestamp]"
+```mermaid
+flowchart TD
+    A[Button Hold 3s] --> B{Debounce Check}
+    B -- "false trigger?" --> C[Ignore]
+    B -- valid --> D[LED → YELLOW <br> working...]
+    D --> E[1. Cancel pending orders <br> Upstox API]
+    D --> F[2. Close open positions <br> Upstox API]
+    D --> G[3. Set bot kill flag <br> Webhook / shared flag]
+    D --> H[4. Send Telegram alert]
+    E & F & G & H --> I["LED → RED (done) <br> Buzzer beep x3 <br> OLED → KILL EXECUTED"]
 ```
 
 ---
