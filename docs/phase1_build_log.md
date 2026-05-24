@@ -19,7 +19,7 @@ This document details the development journey, hardware decisions, and troublesh
 
 The move to the ESP32 presented a few environment setup challenges:
 *   **The Cable Issue:** Initially, the ESP32 was not detected by the computer. It turned out to be a "charge-only" Micro-USB cable. Replacing it with a proper data cable resolved the hardware connection issue.
-*   **CP2102 Drivers on macOS 26:** The ESP32 board uses the Silicon Labs CP2102 USB-to-UART bridge. Official drivers were downloaded and installed on macOS 26. The board then correctly appeared at `/dev/cu.SLAB_USBtoUART`.
+*   **CP2102 Drivers on macOS:** The ESP32 board uses the Silicon Labs CP2102 USB-to-UART bridge. Official drivers were downloaded and installed on macOS. The board then correctly appeared at `/dev/cu.SLAB_USBtoUART`.
 *   **Flashing:** Flashed via Arduino IDE 2.x, selecting "ESP32 Dev Module" at 115200 baud.
 
 ## Wiring & Hardware Design Decisions

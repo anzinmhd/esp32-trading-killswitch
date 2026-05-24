@@ -92,7 +92,7 @@ Go to **Tools → Manage Libraries** and install:
 
 ## Step 6 — Wire the Hardware
 
-Refer to `hardware/wiring_diagram.png` for the full diagram.
+Refer to the diagram below for wiring. A full schematic will be added soon.
 
 Quick reference:
 
@@ -103,8 +103,8 @@ flowchart LR
         direction TB
         G4[GPIO 4]
         G18[GPIO 18]
-        G19[GPIO 19]
-        G20[GPIO 20]
+        G15[GPIO 15]
+        G16[GPIO 16]
         G21[GPIO 21]
         G22[GPIO 22]
         V33[3.3V]
@@ -117,8 +117,8 @@ flowchart LR
     V33 -- "10kΩ Pull-up" --> G4
 
     %% LED
-    LEDR[RGB Red Leg] -- "220Ω Resistor" --> G19
-    LEDG[RGB Green Leg] -- "220Ω Resistor" --> G20
+    LEDR[RGB Red Leg] -- "220Ω Resistor" --> G15
+    LEDG[RGB Green Leg] -- "220Ω Resistor" --> G16
     LEDGND[RGB GND Leg] --> GND
 
     %% OLED
@@ -137,7 +137,7 @@ flowchart LR
 ## Step 7 — Flash the Firmware
 
 1. Plug ESP32 into laptop via USB
-2. Open `firmware/killswitch.ino` in Arduino IDE
+2. Open `firmware/killswitch_esp32_v1/killswitch_esp32_v1.ino` in Arduino IDE
 3. Select the correct port: **Tools → Port → COMX** (Windows) or `/dev/ttyUSB0` (Linux/Mac)
 4. Select board: **Tools → Board → ESP32 Dev Module**
 5. Click **Upload** (→ arrow button)

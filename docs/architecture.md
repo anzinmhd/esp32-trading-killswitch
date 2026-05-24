@@ -36,8 +36,8 @@ flowchart LR
         subgraph GPIO["GPIO Layer"]
             G4[GPIO 4]
             G18[GPIO 18]
-            G19[GPIO 19]
-            G20[GPIO 20]
+            G15[GPIO 15]
+            G16[GPIO 16]
             G21[GPIO 21]
             G22[GPIO 22]
         end
@@ -62,8 +62,8 @@ flowchart LR
 
         G4 --> BtnISR
         Logic -->|Buzzer| G18
-        Logic -->|Red| G19
-        Logic -->|Green| G20
+        Logic -->|Red| G15
+        Logic -->|Green| G16
         Logic -->|SDA| G21
         Logic -->|SCL| G22
         

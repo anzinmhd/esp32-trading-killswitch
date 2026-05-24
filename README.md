@@ -3,6 +3,8 @@
 A physical hardware emergency stop for trading bots and automated trading systems. One button press cancels all open orders, closes all positions, stops the bot, and sends an instant alert — even if the software is frozen or unresponsive.
 
 > **Status:** 🚧 In Development — Paper trading phase (Upstox)
+> 
+> *Note: While designed as a generic safety switch, the current phase is tailored for integration with the "Trade-Lab" bot.*
 
 ---
 
@@ -97,8 +99,8 @@ See [`hardware/components_list.md`](hardware/components_list.md) for full detail
 |---|---|---|
 | GPIO 4 | Emergency stop button | INPUT + 10kΩ pull-up |
 | GPIO 18 | Buzzer | OUTPUT |
-| GPIO 19 | RGB LED — Red | OUTPUT |
-| GPIO 20 | RGB LED — Green | OUTPUT |
+| GPIO 15 | RGB LED — Red | OUTPUT |
+| GPIO 16 | RGB LED — Green | OUTPUT |
 | GPIO 21 | OLED SDA | I2C |
 | GPIO 22 | OLED SCL | I2C |
 | 3.3V | Resistors, LED, OLED VCC | Power |
@@ -134,11 +136,11 @@ See [`hardware/components_list.md`](hardware/components_list.md) for full detail
 esp32-trading-killswitch/
 │
 ├── firmware/
-│   ├── killswitch.ino          # Main Arduino sketch
+│   ├── killswitch_esp32_v1/killswitch_esp32_v1.ino # Main Arduino sketch
 │   └── secrets.h.example       # Template for credentials
 │
 ├── hardware/
-│   ├── wiring_diagram.png      # Full circuit diagram
+│   ├── wiring_diagram.png      # Full circuit diagram (Coming soon)
 │   └── components_list.md      # Shopping list with prices
 │
 ├── docs/
@@ -177,9 +179,9 @@ API endpoints used:
 ## Roadmap
 
 - [x] Project initialized
-- [ ] Hardware components purchased
-- [ ] Breadboard prototype wired
-- [ ] Basic button → LED firmware
+- [x] Hardware components purchased
+- [x] Breadboard prototype wired
+- [x] Basic button → LED firmware
 - [ ] WiFi + Upstox API integration
 - [ ] Telegram alert integration
 - [ ] Bot kill flag / webhook
