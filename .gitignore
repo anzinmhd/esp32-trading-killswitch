@@ -1,5 +1,5 @@
 # Credentials — NEVER commit these
-firmware/secrets.h
+**/secrets.h
 *.env
 .env.local
 config.json
