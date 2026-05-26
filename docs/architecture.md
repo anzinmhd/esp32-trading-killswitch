@@ -77,7 +77,7 @@ flowchart LR
 
 ---
 
-## Kill Sequence — Detailed Flow
+## Kill Sequence - Detailed Flow
 
 ```mermaid
 flowchart TD
@@ -103,7 +103,7 @@ flowchart TD
 | 🟡 Yellow (blinking) | Connecting to WiFi on boot |
 | 🟡 Yellow (solid) | Kill sequence executing |
 | 🔴 Red | Kill executed successfully |
-| 🔴 Red (fast blink) | Error — API call failed |
+| 🔴 Red (fast blink) | Error - API call failed |
 | Off | No power |
 
 ---
@@ -129,21 +129,21 @@ All calls use:
 
 The kill switch signals your trading bot to stop placing new orders via one of two methods (choose based on your bot's architecture):
 
-### Option A — Shared file flag (simplest)
+### Option A - Shared file flag (simplest)
 The ESP32 calls a lightweight webhook on your local machine or server that writes a file:
 ```
 /tmp/TRADING_KILL_ACTIVE
 ```
 Your bot checks for this file at the start of each trade cycle and exits if it exists.
 
-### Option B — HTTP webhook
+### Option B - HTTP webhook
 Your trading bot exposes a local endpoint:
 ```
 POST http://your-bot-server:8080/kill
 ```
 The ESP32 calls this endpoint. Your bot shuts down its order loop on receipt.
 
-### Option C — MQTT (advanced)
+### Option C - MQTT (advanced)
 Both the ESP32 and bot subscribe to an MQTT broker. ESP32 publishes `kill` to a topic; bot subscribes and halts.
 
 **Recommended for paper trading phase:** Option A (simplest, no extra infra).

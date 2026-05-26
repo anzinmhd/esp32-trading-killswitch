@@ -14,6 +14,10 @@ Phase 2 transforms the local prototype into a fully integrated, dual-target secu
 
 The system operates across three distinct layers: the **Physical Actuator** (ESP32), the **Companion API** (Flask Webhook), and the **Trading Engine** (Trade-Lab Bot).
 
+<div align="center">
+  <img src="../assets/hardware_action.jpg" alt="ESP32 Kill Switch - Red LED Activated" width="500">
+</div>
+
 ```mermaid
 flowchart TD
     subgraph Hardware["Physical Layer (ESP32)"]
@@ -145,7 +149,30 @@ The ESP32 hosts a stunning, dark-mode web dashboard. Accessible via its local IP
 
 *(The entire HTML/CSS payload is served directly from the ESP32's memory buffer, requiring no external CDNs or internet access to render).*
 
+https://github.com/user-attachments/assets/344e4bfb-7b3c-403a-b025-b65010624b18
+
 ---
 
 ## 🚀 Moving to Phase 3 (Live Capital)
 Phase 2 perfects the network layer and webhook integration for **Paper Trading**. As Trade-Lab moves to real capital (Phase 3), the ESP32 firmware will be upgraded to route its `POST` requests directly to the **Upstox API**, creating an uncompromisable hardware shortcut to the exchange.
+
+---
+
+## 🛠️ Engineering Extras
+
+### Circuit Simulation (Wokwi)
+Before touching the hardware, the full circuit and state machine logic was validated in simulation:
+
+https://github.com/user-attachments/assets/4e0646a7-2cf5-4f4c-9212-97bbb80d4dc8
+
+**Hardware Schematic Views:**
+<div align="center">
+  <img src="../assets/wokwi1.png" alt="Wokwi Hardware Connection - View 1" width="370" style="margin:4px">
+  <img src="../assets/wokwi2.png" alt="Wokwi Hardware Connection - View 2" width="370" style="margin:4px">
+</div>
+
+### Boot Sequence (Serial Monitor)
+The ESP32 features a clean boot sequence showing WiFi connection and NVS memory loading:
+<div align="center">
+  <img src="../assets/serial_monitor.png" alt="Arduino Serial Monitor Boot Logs" width="500">
+</div>

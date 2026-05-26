@@ -1,10 +1,12 @@
 # ⛔ ESP32 Trading Kill Switch (Phase 2)
 
-A physical hardware emergency stop for trading bots and automated trading systems. One button press cancels all open orders, closes all positions, stops the bot, and sends an instant alert — even if the software is frozen or unresponsive.
+A physical hardware emergency stop for trading bots and automated trading systems. One button press cancels all open orders, closes all positions, stops the bot, and sends an instant alert - even if the software is frozen or unresponsive.
 
 > **Status:** ✅ Phase 2 Complete (Dual-Target Webhook Integration)
 > 
 > *Note: This kill switch is tailored for integration with the "Trade-Lab" bot, utilizing a companion Flask server to handle emergency liquidations.*
+
+https://github.com/user-attachments/assets/c169e9ef-8a72-4489-ae2b-6bafaf4d78df
 
 ---
 
@@ -16,7 +18,7 @@ Curious about how it works under the hood? Check out the **[Engineering Showcase
 
 ## 🛑 Why this exists
 
-Automated trading systems can behave unexpectedly — runaway bots, API misfires, flash crashes, or network issues can cause rapid unintended losses. Software-only kill switches fail when the software itself is the problem.
+Automated trading systems can behave unexpectedly - runaway bots, API misfires, flash crashes, or network issues can cause rapid unintended losses. Software-only kill switches fail when the software itself is the problem.
 
 This device is **hardware-first**: a physical button that independently connects to companion Webhook APIs over WiFi to execute an emergency shutdown sequence, completely bypassing your trading bot's core decision loop.
 
@@ -31,6 +33,12 @@ When the emergency button is pressed and held for 3 continuous seconds:
 3. 🛑 **Writes a persistent kill flag** (`data/KILL_ACTIVE`) to the server disk. The main bot reads this flag and halts all trading.
 4. 📲 **Sends a Telegram alert** directly from the hardware with the execution status.
 5. 🔴 **LED + buzzer** confirm the action was executed.
+
+<div align="center">
+  <img src="assets/hardware_top.jpg" alt="Top-down wiring view" width="31%" style="margin:4px">
+  <img src="assets/hardware_oled.jpg" alt="OLED display showing ARMED" width="31%" style="margin:4px">
+  <img src="assets/hardware_action.jpg" alt="Kill switch activated - red LED" width="31%" style="margin:4px">
+</div>
 
 ---
 
@@ -113,8 +121,8 @@ See [`hardware/components_list.md`](hardware/components_list.md) for full detail
 |---|---|---|
 | GPIO 4 | Emergency stop button | INPUT + 10kΩ pull-up |
 | GPIO 18 | Buzzer | OUTPUT |
-| GPIO 15 | RGB LED — Red | OUTPUT (PWM) |
-| GPIO 16 | RGB LED — Green | OUTPUT (PWM) |
+| GPIO 15 | RGB LED - Red | OUTPUT (PWM) |
+| GPIO 16 | RGB LED - Green | OUTPUT (PWM) |
 | GPIO 21 | OLED SDA | I2C |
 | GPIO 22 | OLED SCL | I2C |
 | 3.3V | Resistors, LED, OLED VCC | Power |
@@ -128,10 +136,10 @@ See [`hardware/components_list.md`](hardware/components_list.md) for full detail
 - **API Targets:** Flask server (`kill_server.py`) running in Trade-Lab.
 - **Alerts:** Telegram Bot API
 - **ESP32 Libraries:**
-  - `WiFiClientSecure` & `HTTPClient` — HTTPS API connections
-  - `WebServer` — Embedded dark-mode UI
-  - `Preferences` — NVS storage for target toggles
-  - `Adafruit_SSD1306` — OLED display
+  - `WiFiClientSecure` & `HTTPClient` - HTTPS API connections
+  - `WebServer` - Embedded dark-mode UI
+  - `Preferences` - NVS storage for target toggles
+  - `Adafruit_SSD1306` - OLED display
 
 ---
 
@@ -158,6 +166,17 @@ esp32-trading-killswitch/
 ├── hardware/
 │   └── components_list.md      # Shopping list with prices and tips
 │
+├── assets/
+│   ├── hero.mp4                # End-to-end action video
+│   ├── dashboard.mp4           # Dashboard demo recording
+│   ├── wokwi.mp4               # Wokwi circuit simulation
+│   ├── wokwi1.png              # Wokwi hardware schematic (view 1)
+│   ├── wokwi2.png              # Wokwi hardware schematic (view 2)
+│   ├── serial_monitor.png      # Arduino serial boot log
+│   ├── hardware_top.jpg        # Top-down prototype photo
+│   ├── hardware_oled.jpg       # OLED close-up photo
+│   └── hardware_action.jpg     # Action shot (red LED)
+│
 ├── docs/
 │   ├── setup.md                # Full setup & build guide
 │   ├── showcase.md             # Deep dive engineering showcase
@@ -182,7 +201,7 @@ Ready to build your own? See **[`docs/setup.md`](docs/setup.md)** for complete, 
 
 ## 📜 License
 
-MIT — use freely, trade responsibly.
+MIT - use freely, trade responsibly.
 
 ---
 
